@@ -39,24 +39,26 @@ module.exports.getAllArticles = (req, res, next) => {
       }
       if (articles.owner === req.owner._id) {
         usersSavedArticlesCount += 1;
-        res.send({ data: [
-          articles.keyword,
-          articles.title,
-          articles.text,
-          articles.date,
-          articles.source,
-          articles.link,
-          articles.image,
-        ] });
-      };
+        res.send({
+          data: [
+            articles.keyword,
+            articles.title,
+            articles.text,
+            articles.date,
+            articles.source,
+            articles.link,
+            articles.image,
+          ],
+        });
+      }
     })
-    .then (() => {
+    .then(() => {
       if (usersSavedArticlesCount === 0) {
         const error = new Error('You have not saved any articles yet');
         error.statusCode = 404;
         next(error);
       } else {
-        res.send({articlesCount: usersSavedArticlesCount});
+        res.send({ articlesCount: usersSavedArticlesCount });
       }
     })
     .catch((err) => {
@@ -67,18 +69,24 @@ module.exports.getAllArticles = (req, res, next) => {
 };
 
 module.exports.createArticle = (req, res, next) => {
-  const { keyword, title, text, date, source, link, image } = req.body;
+  const {
+    keyword, title, text, date, source, link, image,
+  } = req.body;
 
-  Article.create({ keyword, title, text, date, source, link, image, owner: req.user._id })
-    .then((articles) => res.send({ data: [
-      articles.keyword,
-      articles.title,
-      articles.text,
-      articles.date,
-      articles.source,
-      articles.link,
-      articles.image
-    ] }))
+  Article.create({
+    keyword, title, text, date, source, link, image, owner: req.user._id,
+  })
+    .then((articles) => res.send({
+      data: {
+        keyword: articles.keyword,
+        title: articles.title,
+        text: articles.text,
+        date: articles.date,
+        source: articles.source,
+        link: articles.link,
+        image: articles.image,
+      },
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const error = new Error('Invalid Input');
