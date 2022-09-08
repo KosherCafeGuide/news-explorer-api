@@ -12,6 +12,7 @@ module.exports.deleteArticle = (req, res, next) => {
     })
     .then((article) => res.send({ data: article }))
     .catch((err) => {
+      console.log(err);
       if (err.statusCode === 404) {
         const error = new Error('No article found with that id');
         error.statusCode = 404;
@@ -29,40 +30,51 @@ module.exports.deleteArticle = (req, res, next) => {
 };
 
 module.exports.getAllArticles = (req, res, next) => {
-  let usersSavedArticlesCount = 0;
-  Article.find({}).select('+owner')
+  Article.find({})
     .then((articles) => {
-      if (!articles) {
-        const error = new Error('No articles found');
-        error.statusCode = 404;
-        next(error);
-      }
-      if (articles.owner === req.owner._id) {
-        usersSavedArticlesCount += 1;
-        res.send({
-          data: [
-            articles.keyword,
-            articles.title,
-            articles.text,
-            articles.date,
-            articles.source,
-            articles.link,
-            articles.image,
-          ],
-        });
-      }
+      res.send({
+        keyword: articles.keyword,
+        title: articles.title,
+        text: articles.text,
+        date: articles.date,
+        source: articles.source,
+        link: articles.link,
+        image: articles.image,
+      });
     })
-    .then(() => {
-      if (usersSavedArticlesCount === 0) {
-        const error = new Error('You have not saved any articles yet');
-        error.statusCode = 404;
-        next(error);
-      } else {
-        res.send({ articlesCount: usersSavedArticlesCount });
-      }
-    })
+  // let usersSavedArticlesCount = 0;
+  // Article.find({}).select('+owner')
+  //   .then((articles) => {
+  //     if (!articles) {
+  //       const error = new Error('No articles found');
+  //       error.statusCode = 404;
+  //       next(error);
+  //     }
+  //     if (articles.owner === req.owner._id) {
+  //       usersSavedArticlesCount += 1;
+  //       res.send({
+  //         keyword: articles.keyword,
+  //         title: articles.title,
+  //         text: articles.text,
+  //         date: articles.date,
+  //         source: articles.source,
+  //         link: articles.link,
+  //         image: articles.image,
+  //       });
+  //     }
+  //   })
+    // .then(() => {
+    //   if (usersSavedArticlesCount === 0) {
+    //     const error = new Error('You have not saved any articles yet');
+    //     error.statusCode = 404;
+    //     next(error);
+    //   } else {
+    //     res.send({ articlesCount: usersSavedArticlesCount });
+    //   }
+    // })
     .catch((err) => {
-      const error = new Error('Server Error');
+      console.log(err);
+      const error = new Error(err.name || "Weird Server Error");
       error.statusCode = err.code || 500;
       next(error);
     });
@@ -77,17 +89,16 @@ module.exports.createArticle = (req, res, next) => {
     keyword, title, text, date, source, link, image, owner: req.user._id,
   })
     .then((articles) => res.send({
-      data: {
-        keyword: articles.keyword,
-        title: articles.title,
-        text: articles.text,
-        date: articles.date,
-        source: articles.source,
-        link: articles.link,
-        image: articles.image,
-      },
+      keyword: articles.keyword,
+      title: articles.title,
+      text: articles.text,
+      date: articles.date,
+      source: articles.source,
+      link: articles.link,
+      image: articles.image,
     }))
     .catch((err) => {
+      console.log(err);
       if (err.name === 'ValidationError') {
         const error = new Error('Invalid Input');
         error.statusCode = 400;

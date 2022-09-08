@@ -17,6 +17,7 @@ module.exports.getUser = (req, res, next) => {
     })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
+      console.log(err);
       if (err.statusCode === 404) {
         const error = new Error('No user found with that id');
         error.statusCode = 404;
@@ -42,6 +43,7 @@ module.exports.getCurrentUser = (req, res, next) => {
     })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
+      console.log(err);
       if (err.statusCode === 404) {
         const error = new Error('No user found with that id');
         error.statusCode = 404;
@@ -62,6 +64,7 @@ module.exports.getAllUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
     .catch((err) => {
+      console.log(err);
       const error = new Error(err.message);
       error.statusCode = 500;
       next(error);
@@ -81,6 +84,7 @@ module.exports.createUser = (req, res, next) => {
       .then((user) => res.send({ data: [user.name, user.email] }))
       .catch(
         (err) => {
+          console.log(err);
           if (err.code === 11000) {
             const error = new Error('Email already registered');
             error.statusCode = 409;
@@ -127,6 +131,7 @@ module.exports.login = (req, res, next) => {
       return token;
     })
     .catch((err) => {
+      console.log(err);
       const error = new Error(err.message);
       error.statusCode = 401;
       next(error);
