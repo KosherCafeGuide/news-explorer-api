@@ -30,18 +30,10 @@ module.exports.deleteArticle = (req, res, next) => {
 };
 
 module.exports.getAllArticles = (req, res, next) => {
-  Article.find({})
-    .then((articles) => {
-      res.send({
-        keyword: articles.keyword,
-        title: articles.title,
-        text: articles.text,
-        date: articles.date,
-        source: articles.source,
-        link: articles.link,
-        image: articles.image,
-      });
-    })
+  Article.find({owner:req.user._id}).select('-__v')
+  .then((articles) => {
+    res.send({ articles })
+  })
   // let usersSavedArticlesCount = 0;
   // Article.find({}).select('+owner')
   //   .then((articles) => {

@@ -14,6 +14,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const articleRouter = require('./routes/articles');
 const userRouter = require('./routes/users');
 const { login, createUser } = require('./controllers/users');
+const route404 = require('./routes/route404');
 
 const { PORT = 3000 } = process.env;
 // An array of domains from which cross-domain requests are allowed
@@ -33,6 +34,7 @@ app.post('/signup/', createUser);
 
 app.use('/articles/', articleRouter);
 app.use('/users/', userRouter);
+app.use('*', route404)
 
 app.use(errorLogger);
 app.use(errors());
