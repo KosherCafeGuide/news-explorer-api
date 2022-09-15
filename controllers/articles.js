@@ -12,7 +12,7 @@ module.exports.deleteArticle = (req, res, next) => {
     })
     .then((article) => res.send({ data: article }))
     .catch((err) => {
-      console.log(err);
+      // console.log(err);
       if (err.statusCode === 404) {
         const error = new Error('No article found with that id');
         error.statusCode = 404;
@@ -30,10 +30,10 @@ module.exports.deleteArticle = (req, res, next) => {
 };
 
 module.exports.getAllArticles = (req, res, next) => {
-  Article.find({owner:req.user._id}).select('-__v')
-  .then((articles) => {
-    res.send({ articles })
-  })
+  Article.find({ owner: req.user._id }).select('-__v')
+    .then((articles) => {
+      res.send({ articles });
+    })
   // let usersSavedArticlesCount = 0;
   // Article.find({}).select('+owner')
   //   .then((articles) => {
@@ -65,8 +65,8 @@ module.exports.getAllArticles = (req, res, next) => {
     //   }
     // })
     .catch((err) => {
-      console.log(err);
-      const error = new Error(err.name || "Weird Server Error");
+      // console.log(err);
+      const error = new Error(err.name || 'Weird Server Error');
       error.statusCode = err.code || 500;
       next(error);
     });
@@ -90,7 +90,7 @@ module.exports.createArticle = (req, res, next) => {
       image: articles.image,
     }))
     .catch((err) => {
-      console.log(err);
+      // console.log(err);
       if (err.name === 'ValidationError') {
         const error = new Error('Invalid Input');
         error.statusCode = 400;

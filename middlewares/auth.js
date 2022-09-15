@@ -24,6 +24,7 @@ module.exports = (req, res, next) => {
       ? JWT_SECRET
       : 'dev-secret');
   } catch (err) {
+    // console.log(err);
     // return res
     //   .status(401)
     //   .send({ message: 'Authorization Required (L26)' });
