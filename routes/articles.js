@@ -31,6 +31,6 @@ router.post('/', auth, celebrate({
     image: Joi.string().required().custom(validateURL),
   }),
 }), createArticle);
-router.get('', auth, getAllArticles);
+router.get('/', auth, getAllArticles);
 
 module.exports = router; // exporting the router
